@@ -42,6 +42,41 @@ gulp.task('mytask', function(){
 });
  gulp mytask --loglevel "INFO" --message "test"
 
+* Add an `uglify` task to your gulpfile and a `cssmin` task to your Gruntfile so that each task runner can complete both tasks. You can find Grunt plugins [here](http://gruntjs.com/plugins) and gulp plugins [here](http://gulpjs.com/plugins/);
+
+#### Solution:
+```
+****To be present in gulp.js*****/
+var uglify = require('gulp-uglify-cli')
+
+gulp.task('minifyjs', function(){
+  return gulp.src('src/test.js')
+    .pipe(uglify())
+    .pipe(gulp.dest('dest/'))
+});
+
+/****To be present in gruntfile.js*****/
+  grunt.initConfig({
+    pkg: grunt.file.readJSON('package.json'),
+    cssmin: {
+      all: {
+        files: {
+          'dest/app.min.css': ['styles/*.css']
+        }
+      }
+    }
+	})
+
+
+  grunt.registerTask('minify', function (full) {
+    if (full) {
+      grunt.task.run(['cssmin', 'uglify', 'imagemin']);
+    } else {
+      grunt.task.run(['cssmin', 'uglify']);
+    }
+  });
+```
+ 
 Exercise-2
 ---
 * Install and configure the `grunt-postcss` plugin to run on your compiled Sass and call both `autoprefixer` and `cssnano`. For options see this [documentation page](https://www.npmjs.com/package/grunt-postcss).
